@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "deploy": "npx expo export --platform web && npx firebase-tools deploy --only hosting"
   },
   "dependencies": {
     "@react-navigation/native": "^7.1.33",
@@ -15,6 +16,7 @@
     "expo-image": "~55.0.6",
     "expo-status-bar": "~55.0.4",
     "firebase": "^12.10.0",
+    "firebase-tools": "^15.13.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-native": "0.83.2",
