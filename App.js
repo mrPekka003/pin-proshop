@@ -4,7 +4,6 @@ import HomeScreen from './screens/HomeScreen';
 import BallCatalogScreen from './screens/BallCatalogScreen';
 import BallDetailScreen from './screens/BallDetailScreen';
 import ShopScreen from './screens/ShopScreen';
-import CartScreen from './screens/CartScreen';
 import DrillerBookingScreen from './screens/DrillerBookingScreen';
 import LoginScreen from './screens/LoginScreen';
 import AdminDashboardScreen from './screens/AdminDashboardScreen';
@@ -36,8 +35,7 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="BallCatalog" component={BallCatalogScreen} />
         <Stack.Screen name="BallDetail" component={BallDetailScreen} />
-        <Stack.Screen name="Shop" component={ShopScreen} />
-        <Stack.Screen name="Cart" component={CartScreen} />
+        <Stack.Screen name="Shop" component={ShopScreen} options={{ title: 'Products' }} />
         <Stack.Screen name="DrillerBooking" component={DrillerBookingScreen} />
         <Stack.Screen
           name="Login"

@@ -8,13 +8,12 @@ import { db } from '../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { Colors } from '../constants/colors';
 
-export default function ShopScreen({ navigation }) {
+export default function ShopScreen() {
   const [items, setItems] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [categories, setCategories] = useState(['All']);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -23,11 +22,10 @@ export default function ShopScreen({ navigation }) {
         const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setItems(data);
         setFiltered(data);
-
         const cats = ['All', ...new Set(data.map(item => item.category).filter(Boolean))];
         setCategories(cats);
       } catch (error) {
-        console.error('Error fetching shop items:', error);
+        console.error('Error fetching items:', error);
       } finally {
         setLoading(false);
       }
@@ -44,42 +42,17 @@ export default function ShopScreen({ navigation }) {
     }
   };
 
-  const addToCart = (item) => {
-    setCart(prev => {
-      const existing = prev.find(c => c.id === item.id);
-      if (existing) {
-        return prev.map(c => c.id === item.id ? { ...c, qty: c.qty + 1 } : c);
-      }
-      return [...prev, { ...item, qty: 1 }];
-    });
-  };
-
-  const getCartCount = () => cart.reduce((sum, item) => sum + item.qty, 0);
-
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#1a3c6e" />
-        <Text style={styles.loadingText}>Loading shop...</Text>
+        <ActivityIndicator size="large" color={Colors.secondary} />
+        <Text style={styles.loadingText}>Loading products...</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-
-      {/* Cart Button */}
-      {cart.length > 0 && (
-        <TouchableOpacity
-          style={styles.cartBar}
-          onPress={() => navigation.navigate('Cart', { cart })}
-        >
-          <Text style={styles.cartBarText}>
-            🛒 {getCartCount()} item{getCartCount() > 1 ? 's' : ''} in cart
-          </Text>
-          <Text style={styles.cartBarAction}>View Cart →</Text>
-        </TouchableOpacity>
-      )}
 
       {/* Category Filter */}
       <View style={styles.filterContainer}>
@@ -145,19 +118,17 @@ export default function ShopScreen({ navigation }) {
               <Text style={styles.itemName} numberOfLines={2}>{item.name}</Text>
               <Text style={styles.itemCategory}>{item.category}</Text>
               <Text style={styles.itemPrice}>RM {item.price}</Text>
-
-              <TouchableOpacity
-                style={[
-                  styles.addButton,
-                  item.stock === 0 && styles.addButtonDisabled
-                ]}
-                onPress={() => addToCart(item)}
-                disabled={item.stock === 0}
-              >
-                <Text style={styles.addButtonText}>
-                  {item.stock === 0 ? 'Unavailable' : '+ Add to Cart'}
+              {item.description ? (
+                <Text style={styles.itemDesc} numberOfLines={2}>{item.description}</Text>
+              ) : null}
+              <View style={[
+                styles.stockBadge,
+                { backgroundColor: item.stock > 0 ? Colors.primary : '#7a3020' }
+              ]}>
+                <Text style={styles.stockBadgeText}>
+                  {item.stock > 0 ? `${item.stock} in stock` : 'Out of stock'}
                 </Text>
-              </TouchableOpacity>
+              </View>
             </View>
 
           </View>
@@ -183,24 +154,6 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 16,
     color: Colors.accent,
-  },
-  cartBar: {
-    backgroundColor: Colors.primary,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-  },
-  cartBarText: {
-    color: Colors.accent,
-    fontSize: 15,
-    fontWeight: 'bold',
-  },
-  cartBarAction: {
-    color: Colors.accent,
-    fontSize: 14,
-    opacity: 0.8,
   },
   filterContainer: {
     backgroundColor: Colors.card,
@@ -295,21 +248,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: Colors.secondary,
-    marginTop: 4,
+    marginTop: 2,
   },
-  addButton: {
-    backgroundColor: Colors.primary,
-    paddingVertical: 8,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
+  itemDesc: {
+    fontSize: 12,
+    color: Colors.muted,
+    lineHeight: 16,
   },
-  addButtonDisabled: {
-    backgroundColor: Colors.border,
+  stockBadge: {
+    alignSelf: 'flex-start',
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 20,
+    marginTop: 6,
   },
-  addButtonText: {
+  stockBadgeText: {
     color: Colors.accent,
-    fontSize: 13,
+    fontSize: 11,
     fontWeight: 'bold',
   },
 });

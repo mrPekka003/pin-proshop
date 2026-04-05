@@ -33,8 +33,8 @@ export default function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate('Shop')}
         >
           <Text style={styles.cardIcon}>🛍️</Text>
-          <Text style={styles.cardTitle}>Shop</Text>
-          <Text style={styles.cardDesc}>Buy equipment & accessories</Text>
+          <Text style={styles.cardTitle}>Products</Text>
+          <Text style={styles.cardDesc}>Browse our equipment & accessories</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
