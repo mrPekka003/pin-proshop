@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
+import {
+  View, Text, StyleSheet, FlatList,
+  TouchableOpacity, ActivityIndicator, useWindowDimensions
+} from 'react-native';
 import { Image } from 'expo-image';
 import { db } from '../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
@@ -8,6 +11,19 @@ import { Colors } from '../constants/colors';
 export default function BallCatalogScreen({ navigation }) {
   const [balls, setBalls] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { width } = useWindowDimensions();
+
+  // Responsive columns based on screen width
+  const getNumColumns = () => {
+    if (width >= 1200) return 4;
+    if (width >= 800) return 3;
+    return 2;
+  };
+
+  const numColumns = getNumColumns();
+  const GAP = 16;
+  const PADDING = 16;
+  const cardWidth = (width - PADDING * 2 - GAP * (numColumns - 1)) / numColumns;
 
   useEffect(() => {
     const fetchBalls = async () => {
@@ -21,14 +37,13 @@ export default function BallCatalogScreen({ navigation }) {
         setLoading(false);
       }
     };
-
     fetchBalls();
   }, []);
 
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#1a3c6e" />
+        <ActivityIndicator size="large" color={Colors.secondary} />
         <Text style={styles.loadingText}>Loading catalog...</Text>
       </View>
     );
@@ -39,13 +54,17 @@ export default function BallCatalogScreen({ navigation }) {
       <FlatList
         data={balls}
         keyExtractor={item => item.id}
+        numColumns={numColumns}
+        key={numColumns}
         contentContainerStyle={styles.list}
+        columnWrapperStyle={numColumns > 1 ? { gap: GAP } : null}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={styles.card}
+            style={[styles.card, { width: cardWidth }]}
             onPress={() => navigation.navigate('BallDetail', { ball: item })}
+            activeOpacity={0.85}
           >
-            {/* Ball Image */}
+            {/* Image */}
             <View style={styles.imageContainer}>
               {item.imageUrl ? (
                 <Image
@@ -59,10 +78,10 @@ export default function BallCatalogScreen({ navigation }) {
                 </View>
               )}
 
-              {/* Availability Badge overlaid on image */}
+              {/* Availability Badge */}
               <View style={[
                 styles.badge,
-                { backgroundColor: item.available ? '#2d6a4f' : '#b5451b' }
+                { backgroundColor: item.available ? Colors.primary : '#7a3020' }
               ]}>
                 <Text style={styles.badgeText}>
                   {item.available ? 'Available' : 'Unavailable'}
@@ -70,26 +89,24 @@ export default function BallCatalogScreen({ navigation }) {
               </View>
             </View>
 
-            {/* Ball Info */}
-            <Text style={styles.ballName}>{item.name}</Text>
-            <Text style={styles.ballBrand}>{item.brand}</Text>
+            {/* Info */}
+            <View style={styles.cardBody}>
+              <Text style={styles.ballName} numberOfLines={1}>{item.name}</Text>
+              <Text style={styles.ballBrand} numberOfLines={1}>{item.brand}</Text>
 
-            <View style={styles.specRow}>
-              <View style={styles.specItem}>
-                <Text style={styles.specLabel}>Weight</Text>
-                <Text style={styles.specValue}>{item.weight} lbs</Text>
+              <View style={styles.specRow}>
+                <View style={styles.specItem}>
+                  <Text style={styles.specLabel}>Weight</Text>
+                  <Text style={styles.specValue}>{item.weight} lbs</Text>
+                </View>
+                <View style={styles.specItem}>
+                  <Text style={styles.specLabel}>Price</Text>
+                  <Text style={styles.specValue}>RM {item.price}</Text>
+                </View>
               </View>
-              <View style={styles.specItem}>
-                <Text style={styles.specLabel}>Coverstock</Text>
-                <Text style={styles.specValue}>{item.coverstock}</Text>
-              </View>
-              <View style={styles.specItem}>
-                <Text style={styles.specLabel}>Price</Text>
-                <Text style={styles.specValue}>RM {item.price}</Text>
-              </View>
+
+              <Text style={styles.viewMore}>Tap to view specs →</Text>
             </View>
-
-            <Text style={styles.viewMore}>Tap to view full specs →</Text>
           </TouchableOpacity>
         )}
       />
@@ -126,7 +143,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: '100%',
-    height: 200,
+    aspectRatio: 1,
     backgroundColor: Colors.background,
   },
   ballImage: {
@@ -140,65 +157,62 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   imagePlaceholderText: {
-    fontSize: 64,
+    fontSize: 48,
   },
   badge: {
     position: 'absolute',
-    top: 12,
-    right: 12,
-    paddingHorizontal: 12,
+    top: 10,
+    right: 10,
+    paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 20,
   },
   badgeText: {
     color: Colors.accent,
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 'bold',
+  },
+  cardBody: {
+    padding: 12,
+    gap: 6,
   },
   ballName: {
-    fontSize: 20,
+    fontSize: 15,
     fontWeight: 'bold',
     color: Colors.accent,
-    marginBottom: 4,
-    paddingHorizontal: 20,
-    paddingTop: 16,
   },
   ballBrand: {
-    fontSize: 14,
+    fontSize: 12,
     color: Colors.muted,
-    marginBottom: 16,
-    paddingHorizontal: 20,
   },
   specRow: {
     flexDirection: 'row',
-    gap: 12,
-    marginBottom: 16,
-    paddingHorizontal: 20,
+    gap: 8,
+    marginTop: 4,
   },
   specItem: {
     flex: 1,
     backgroundColor: Colors.background,
-    borderRadius: 10,
-    padding: 10,
+    borderRadius: 8,
+    padding: 8,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: Colors.border,
   },
   specLabel: {
-    fontSize: 11,
+    fontSize: 10,
     color: Colors.muted,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   specValue: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 'bold',
     color: Colors.secondary,
   },
   viewMore: {
-    fontSize: 13,
+    fontSize: 12,
     color: Colors.secondary,
     textAlign: 'right',
-    paddingHorizontal: 20,
-    paddingBottom: 16,
+    marginTop: 2,
   },
 });
