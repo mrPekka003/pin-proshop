@@ -91,9 +91,9 @@ export default function AdminBallFormScreen({ route, navigation }) {
         <View style={[styles.section, styles.col]}>
           <Text style={styles.sectionTitle}>Basic Info</Text>
           {!isEditing && (
-            <Field label="Document ID *" value={docId} onChangeText={setDocId} placeholder="e.g. storm-phaze-ii" />
+            <Field label="Document ID *" value={docId} onChangeText={setDocId} placeholder="use CamelCase format, e.g. phaze2Pearl" />
           )}
-          <Field label="Ball Name *" value={name} onChangeText={setName} placeholder="e.g. Phaze II" />
+          <Field label="Ball Name *" value={name} onChangeText={setName} placeholder="e.g. Phaze 2" />
           <Field label="Brand *" value={brand} onChangeText={setBrand} placeholder="e.g. Storm" />
           <Field label="Image URL" value={imageUrl} onChangeText={setImageUrl} placeholder="https://..." />
         </View>
