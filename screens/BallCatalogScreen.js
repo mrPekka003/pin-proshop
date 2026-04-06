@@ -15,6 +15,7 @@ export default function BallCatalogScreen({ navigation }) {
 
   // Responsive columns based on screen width
   const getNumColumns = () => {
+    if (width >= 1440) return 5;
     if (width >= 1200) return 4;
     if (width >= 800) return 3;
     return 2;
@@ -96,12 +97,12 @@ export default function BallCatalogScreen({ navigation }) {
 
               <View style={styles.specRow}>
                 <View style={styles.specItem}>
-                  <Text style={styles.specLabel}>Weight</Text>
-                  <Text style={styles.specValue}>{item.weight} lbs</Text>
+                  <Text style={styles.specLabel}>coverstock</Text>
+                  <Text style={styles.specValue}>{item.coverstock}</Text>
                 </View>
                 <View style={styles.specItem}>
-                  <Text style={styles.specLabel}>Price</Text>
-                  <Text style={styles.specValue}>RM {item.price}</Text>
+                  <Text style={styles.specLabel}>Core type</Text>
+                  <Text style={styles.specValue}>{item.symmetrical ? 'Symmetrical' : 'Asymmetrical'}</Text>
                 </View>
               </View>
 
