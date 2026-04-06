@@ -8,6 +8,27 @@ import { db } from '../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { Colors } from '../constants/colors';
 
+function BallImage({ uri, imageStyle, placeholderStyle, placeholderTextStyle }) {
+  const [error, setError] = useState(false);
+
+  if (!uri || error) {
+    return (
+      <View style={placeholderStyle}>
+        <Text style={placeholderTextStyle}>🎳</Text>
+      </View>
+    );
+  }
+
+  return (
+    <Image
+      source={{ uri }}
+      style={imageStyle}
+      contentFit="contain"
+      onError={() => setError(true)}
+    />
+  );
+}
+
 export default function BallCatalogScreen({ navigation }) {
   const [balls, setBalls] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,17 +88,12 @@ export default function BallCatalogScreen({ navigation }) {
           >
             {/* Image */}
             <View style={styles.imageContainer}>
-              {item.imageUrl ? (
-                <Image
-                  source={{ uri: item.imageUrl }}
-                  style={styles.ballImage}
-                  contentFit="contain"
-                />
-              ) : (
-                <View style={styles.imagePlaceholder}>
-                  <Text style={styles.imagePlaceholderText}>🎳</Text>
-                </View>
-              )}
+              <BallImage
+                uri={item.imageUrl}
+                imageStyle={styles.ballImage}
+                placeholderStyle={styles.imagePlaceholder}
+                placeholderTextStyle={styles.imagePlaceholderText}
+              />
 
               {/* Availability Badge */}
               <View style={[
