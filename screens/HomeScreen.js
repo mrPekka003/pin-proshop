@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Linking } from 'react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { Colors } from '../constants/colors';
 
 export default function HomeScreen({ navigation }) {
@@ -50,8 +51,17 @@ export default function HomeScreen({ navigation }) {
 
       {/* Footer */}
       <View style={styles.footer}>
+        <TouchableOpacity onPress={() => Linking.openURL('https://maps.app.goo.gl/iLaxeELBj87rZiW27')}> 
         <Text style={styles.footerText}>📍 Lot 3-1 Jalan Jelok & Kompleks Metro Point, Bandar Kajang 43000 Selangor.</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          onPress={() => 
+          {Clipboard.setString('+601112261274');  
+          alert('Phone number copied to clipboard!');} }>
         <Text style={styles.footerText}>📞 +60 11 1226 1274</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => navigation.navigate('Login')}
           style={styles.adminLink}
@@ -131,15 +141,16 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: Colors.border,
     marginTop: 20,
-    gap: 6,
+    gap: 10,
   },
-  footerText: {
+  footerLink: {
     fontSize: 14,
-    color: Colors.muted,
+    color: Colors.secondary,
     textAlign: 'center',
+    textDecorationLine: 'underline',
   },
   adminLink: {
-    marginTop: 12,
+    marginTop: 4,
     paddingVertical: 8,
   },
   adminLinkText: {
