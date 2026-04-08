@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import {
   View, Text, StyleSheet, FlatList,
-  TouchableOpacity, ActivityIndicator, useWindowDimensions
+  TouchableOpacity, ActivityIndicator, useWindowDimensions,
+  TextInput
 } from 'react-native';
 import { Image } from 'expo-image';
 import { db } from '../config/firebase';
@@ -32,6 +33,7 @@ function BallImage({ uri, imageStyle, placeholderStyle, placeholderTextStyle }) 
 export default function BallCatalogScreen({ navigation }) {
   const [balls, setBalls] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState('');
   const { width } = useWindowDimensions();
 
   // Responsive columns based on screen width
@@ -43,6 +45,17 @@ export default function BallCatalogScreen({ navigation }) {
   };
 
   const numColumns = getNumColumns();
+
+  const filteredBalls = query.trim()
+    ? balls.filter(b => {
+        const q = query.toLowerCase();
+        return (
+          b.name?.toLowerCase().includes(q) ||
+          b.brand?.toLowerCase().includes(q) ||
+          b.coverstock?.toLowerCase().includes(q)
+        );
+      })
+    : balls;
   const GAP = 16;
   const PADDING = 16;
   const cardWidth = (width - PADDING * 2 - GAP * (numColumns - 1)) / numColumns;
@@ -73,8 +86,18 @@ export default function BallCatalogScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search by name, brand, or coverstock..."
+          placeholderTextColor={Colors.muted}
+          value={query}
+          onChangeText={setQuery}
+          clearButtonMode="while-editing"
+        />
+      </View>
       <FlatList
-        data={balls}
+        data={filteredBalls}
         keyExtractor={item => item.id}
         numColumns={numColumns}
         key={numColumns}
@@ -145,6 +168,21 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     fontSize: 16,
+    color: Colors.accent,
+  },
+  searchContainer: {
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 4,
+  },
+  searchInput: {
+    backgroundColor: Colors.card,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    fontSize: 14,
     color: Colors.accent,
   },
   list: {
