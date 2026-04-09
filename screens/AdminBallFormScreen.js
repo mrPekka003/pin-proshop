@@ -24,6 +24,8 @@ function Field({ label, value, onChangeText, placeholder, keyboardType }) {
   );
 }
 
+const CATEGORIES = ['High Performance', 'Mid Performance', 'Entry Level', 'Urethane', 'Plastic / Spare'];
+
 export default function AdminBallFormScreen({ route, navigation }) {
   const existing = route.params?.ball;
 
@@ -39,6 +41,8 @@ export default function AdminBallFormScreen({ route, navigation }) {
   const [imageUrl, setImageUrl] = useState(existing?.imageUrl ?? '');
   const [available, setAvailable] = useState(existing?.available ?? true);
   const [symmetrical, setSymmetrical] = useState(existing?.symmetrical ?? true);
+  const [releaseDate, setReleaseDate] = useState(existing?.releaseDate ?? '');
+  const [category, setCategory] = useState(existing?.category ?? '');
   const [loading, setLoading] = useState(false);
 
   const isEditing = !!existing;
@@ -61,6 +65,8 @@ export default function AdminBallFormScreen({ route, navigation }) {
         rg: parseFloat(rg) || null,
         diff: parseFloat(diff) || null,
         imageUrl, available, symmetrical,
+        releaseDate,
+        category,
       };
 
       if (isEditing) {
@@ -95,6 +101,40 @@ export default function AdminBallFormScreen({ route, navigation }) {
           )}
           <Field label="Ball Name *" value={name} onChangeText={setName} placeholder="e.g. Phaze 2" />
           <Field label="Brand *" value={brand} onChangeText={setBrand} placeholder="e.g. Storm" />
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Release Date</Text>
+            <TextInput
+              style={styles.input}
+              value={releaseDate}
+              onChangeText={v => {
+                const digits = v.replace(/\D/g, '').slice(0, 8);
+                let formatted = digits;
+                if (digits.length > 4) formatted = `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4)}`;
+                else if (digits.length > 2) formatted = `${digits.slice(0, 2)}-${digits.slice(2)}`;
+                setReleaseDate(formatted);
+              }}
+              placeholder="DD-MM-YYYY"
+              placeholderTextColor={Colors.muted}
+              keyboardType="numeric"
+              maxLength={10}
+            />
+          </View>
+          <View style={styles.fieldGroup}>
+            <Text style={styles.label}>Category</Text>
+            <View style={styles.chipRow}>
+              {CATEGORIES.map(cat => (
+                <TouchableOpacity
+                  key={cat}
+                  style={[styles.chip, category === cat && styles.chipSelected]}
+                  onPress={() => setCategory(prev => prev === cat ? '' : cat)}
+                >
+                  <Text style={[styles.chipText, category === cat && styles.chipTextSelected]}>
+                    {cat}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
           <Field label="Image URL" value={imageUrl} onChangeText={setImageUrl} placeholder="https://..." />
         </View>
 
@@ -246,6 +286,32 @@ const styles = StyleSheet.create({
   toggleLabel: {
     fontSize: 13,
     color: Colors.accent,
+  },
+  chipRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 4,
+  },
+  chip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    backgroundColor: Colors.background,
+  },
+  chipSelected: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+  chipText: {
+    fontSize: 12,
+    color: Colors.muted,
+  },
+  chipTextSelected: {
+    color: Colors.accent,
+    fontWeight: 'bold',
   },
   saveButton: {
     backgroundColor: Colors.primary,

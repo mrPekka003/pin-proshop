@@ -52,7 +52,8 @@ export default function BallCatalogScreen({ navigation }) {
         return (
           b.name?.toLowerCase().includes(q) ||
           b.brand?.toLowerCase().includes(q) ||
-          b.coverstock?.toLowerCase().includes(q)
+          b.coverstock?.toLowerCase().includes(q) ||
+          b.category?.toLowerCase().includes(q)
         );
       })
     : balls;
@@ -132,7 +133,14 @@ export default function BallCatalogScreen({ navigation }) {
             {/* Info */}
             <View style={styles.cardBody}>
               <Text style={styles.ballName} numberOfLines={1}>{item.name}</Text>
-              <Text style={styles.ballBrand} numberOfLines={1}>{item.brand}</Text>
+              <View style={styles.brandRow}>
+                <Text style={styles.ballBrand} numberOfLines={1}>{item.brand}</Text>
+                {item.category ? (
+                  <View style={styles.categoryTag}>
+                    <Text style={styles.categoryTagText}>{item.category}</Text>
+                  </View>
+                ) : null}
+              </View>
 
               <View style={styles.specRow}>
                 <View style={styles.specItem}>
@@ -236,9 +244,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: Colors.accent,
   },
+  brandRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    flexWrap: 'wrap',
+  },
   ballBrand: {
     fontSize: 12,
     color: Colors.muted,
+  },
+  categoryTag: {
+    backgroundColor: Colors.primary,
+    borderRadius: 10,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+  },
+  categoryTagText: {
+    fontSize: 10,
+    color: Colors.accent,
+    fontWeight: 'bold',
   },
   specRow: {
     flexDirection: 'row',
