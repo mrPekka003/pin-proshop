@@ -38,6 +38,7 @@ export default function AdminBallFormScreen({ route, navigation }) {
   const [finish, setFinish] = useState(existing?.finish ?? '');
   const [rg, setRg] = useState(existing?.rg?.toString() ?? '');
   const [diff, setDiff] = useState(existing?.diff?.toString() ?? '');
+  const [intDiff, setIntDiff] = useState(existing?.intDiff?.toString() ?? '');
   const [imageUrl, setImageUrl] = useState(existing?.imageUrl ?? '');
   const [available, setAvailable] = useState(existing?.available ?? true);
   const [symmetrical, setSymmetrical] = useState(existing?.symmetrical ?? true);
@@ -64,6 +65,7 @@ export default function AdminBallFormScreen({ route, navigation }) {
         coverstock, color, core, finish,
         rg: parseFloat(rg) || null,
         diff: parseFloat(diff) || null,
+        intDiff: !symmetrical ? (parseFloat(intDiff) || null) : null,
         imageUrl, available, symmetrical,
         releaseDate,
         category,
@@ -153,6 +155,9 @@ export default function AdminBallFormScreen({ route, navigation }) {
               <Field label="Differential" value={diff} onChangeText={setDiff} placeholder="0.051" keyboardType="numeric" />
             </View>
           </View>
+          {!symmetrical && (
+            <Field label="Int. Differential (PSA)" value={intDiff} onChangeText={setIntDiff} placeholder="0.018" keyboardType="numeric" />
+          )}
         </View>
 
       </View>
