@@ -1,6 +1,8 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Image } from 'expo-image';
 import { Colors } from '../constants/colors';
+import WebHeader from '../components/WebHeader';
+import WebFooter from '../components/WebFooter';
 
 export default function BallDetailScreen({ route, navigation }) {
   const { ball } = route.params;
@@ -18,7 +20,9 @@ export default function BallDetailScreen({ route, navigation }) {
   ];
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.root}>
+      <WebHeader navigation={navigation} />
+      <ScrollView contentContainerStyle={styles.container}>
 
       {/* Top Section — Image + Info side by side */}
       <View style={styles.topSection}>
@@ -83,11 +87,17 @@ export default function BallDetailScreen({ route, navigation }) {
         </TouchableOpacity>
       </View>
 
+      <WebFooter navigation={navigation} />
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
   container: {
     flexGrow: 1,
     backgroundColor: Colors.background,

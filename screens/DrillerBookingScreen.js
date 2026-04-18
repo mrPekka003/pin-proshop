@@ -6,6 +6,8 @@ import {
 import { db } from '../config/firebase';
 import { collection, addDoc, Timestamp } from 'firebase/firestore';
 import { Colors } from '../constants/colors';
+import WebHeader from '../components/WebHeader';
+import WebFooter from '../components/WebFooter';
 
 const TIME_SLOTS = [
   '10:00 AM', '11:00 AM', '12:00 PM',
@@ -21,7 +23,7 @@ const DRILLING_SERVICES = [
   { id: 'plugfill', label: 'Plug & Fill', desc: 'Fill existing holes' },
 ];
 
-export default function DrillerBookingScreen() {
+export default function DrillerBookingScreen({ navigation }) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [notes, setNotes] = useState('');
@@ -111,7 +113,9 @@ const handleSubmit = async () => {
 };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.root}>
+      <WebHeader navigation={navigation} />
+      <ScrollView contentContainerStyle={styles.container}>
 
       {/* Header Banner */}
       <View style={styles.banner}>
@@ -252,11 +256,17 @@ const handleSubmit = async () => {
         </Text>
       </TouchableOpacity>
 
+      <WebFooter navigation={navigation} />
     </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
   container: {
     flexGrow: 1,
     backgroundColor: Colors.background,

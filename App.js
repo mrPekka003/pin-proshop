@@ -32,11 +32,11 @@ export default function App() {
         <Stack.Screen name="AdminShop" component={AdminShopScreen} options={{ title: 'Manage Shop Items' }}/>
         <Stack.Screen name="AdminBallForm" component={AdminBallFormScreen} options={{ title: 'Ball Details' }}/>
         <Stack.Screen name="AdminShopForm" component={AdminShopFormScreen} options={{ title: 'Shop Item Details' }}/>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="BallCatalog" component={BallCatalogScreen} />
-        <Stack.Screen name="BallDetail" component={BallDetailScreen} />
-        <Stack.Screen name="Shop" component={ShopScreen} options={{ title: 'Products' }} />
-        <Stack.Screen name="DrillerBooking" component={DrillerBookingScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="BallCatalog" component={BallCatalogScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="BallDetail" component={BallDetailScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Shop" component={ShopScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="DrillerBooking" component={DrillerBookingScreen} options={{ headerShown: false }} />
         <Stack.Screen
           name="Login"
           component={LoginScreen}

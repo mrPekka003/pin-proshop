@@ -8,6 +8,8 @@ import { Image } from 'expo-image';
 import { db } from '../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { Colors } from '../constants/colors';
+import WebHeader from '../components/WebHeader';
+import WebFooter from '../components/WebFooter';
 
 function BallImage({ uri, imageStyle, placeholderStyle, placeholderTextStyle }) {
   const [error, setError] = useState(false);
@@ -78,15 +80,20 @@ export default function BallCatalogScreen({ navigation }) {
 
   if (loading) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.secondary} />
-        <Text style={styles.loadingText}>Loading catalog...</Text>
+      <View style={styles.root}>
+        <WebHeader navigation={navigation} />
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={Colors.secondary} />
+          <Text style={styles.loadingText}>Loading catalog...</Text>
+        </View>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.root}>
+      <WebHeader navigation={navigation} />
+      <View style={styles.container}>
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -104,6 +111,7 @@ export default function BallCatalogScreen({ navigation }) {
         key={numColumns}
         contentContainerStyle={styles.list}
         columnWrapperStyle={numColumns > 1 ? { gap: GAP } : null}
+        ListFooterComponent={<WebFooter navigation={navigation} />}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[styles.card, { width: cardWidth }]}
@@ -158,11 +166,16 @@ export default function BallCatalogScreen({ navigation }) {
           </TouchableOpacity>
         )}
       />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.background,

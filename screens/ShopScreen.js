@@ -7,8 +7,10 @@ import { Image } from 'expo-image';
 import { db } from '../config/firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { Colors } from '../constants/colors';
+import WebHeader from '../components/WebHeader';
+import WebFooter from '../components/WebFooter';
 
-export default function ShopScreen() {
+export default function ShopScreen({ navigation }) {
   const [items, setItems] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [categories, setCategories] = useState(['All']);
@@ -44,15 +46,20 @@ export default function ShopScreen() {
 
   if (loading) {
     return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color={Colors.secondary} />
-        <Text style={styles.loadingText}>Loading products...</Text>
+      <View style={styles.root}>
+        <WebHeader navigation={navigation} />
+        <View style={styles.centered}>
+          <ActivityIndicator size="large" color={Colors.secondary} />
+          <Text style={styles.loadingText}>Loading products...</Text>
+        </View>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.root}>
+      <WebHeader navigation={navigation} />
+      <View style={styles.container}>
 
       {/* Category Filter */}
       <View style={styles.filterContainer}>
@@ -133,13 +140,19 @@ export default function ShopScreen() {
 
           </View>
         )}
+        ListFooterComponent={<WebFooter navigation={navigation} />}
       />
 
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: Colors.background,
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.background,
