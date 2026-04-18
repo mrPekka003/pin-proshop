@@ -44,6 +44,7 @@ export default function AdminBallFormScreen({ route, navigation }) {
   const [symmetrical, setSymmetrical] = useState(existing?.symmetrical ?? true);
   const [releaseDate, setReleaseDate] = useState(existing?.releaseDate ?? '');
   const [category, setCategory] = useState(existing?.category ?? '');
+  const [isOEM, setIsOEM] = useState(existing?.isOEM ?? false);
   const [loading, setLoading] = useState(false);
 
   const isEditing = !!existing;
@@ -66,7 +67,7 @@ export default function AdminBallFormScreen({ route, navigation }) {
         rg: parseFloat(rg) || null,
         diff: parseFloat(diff) || null,
         intDiff: !symmetrical ? (parseFloat(intDiff) || null) : null,
-        imageUrl, available, symmetrical,
+        imageUrl, available, symmetrical, isOEM,
         releaseDate,
         category,
       };
@@ -175,6 +176,15 @@ export default function AdminBallFormScreen({ route, navigation }) {
                 thumbColor={Colors.accent}
               />
               <Text style={styles.toggleLabel}>Available</Text>
+            </View>
+            <View style={styles.toggleItem}>
+              <Switch
+                value={isOEM}
+                onValueChange={setIsOEM}
+                trackColor={{ false: Colors.border, true: Colors.primary }}
+                thumbColor={Colors.accent}
+              />
+              <Text style={styles.toggleLabel}>OEM / Special Release</Text>
             </View>
             <View style={styles.toggleItem}>
               <Switch
