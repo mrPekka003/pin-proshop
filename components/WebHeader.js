@@ -22,6 +22,13 @@ export default function WebHeader({ navigation }) {
   const activeScreen = ACTIVE_MAP[currentRoute] ?? currentRoute;
 
   return (
+    <View>
+      {/* Development Banner */}
+      <View style={styles.devBanner}>
+        <Text style={styles.devBannerText}>
+          🚧 This website is currently under development. Some features may not be available yet.
+        </Text>
+      </View>
     <View style={styles.header}>
       <View style={styles.inner}>
         {/* Logo */}
@@ -63,10 +70,23 @@ export default function WebHeader({ navigation }) {
         )}
       </View>
     </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  devBanner: {
+    backgroundColor: '#7a5c00',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    alignItems: 'center',
+  },
+  devBannerText: {
+    color: '#ffe082',
+    fontSize: 13,
+    fontWeight: '500',
+    textAlign: 'center',
+  },
   header: {
     backgroundColor: Colors.card,
     borderBottomWidth: 1,
