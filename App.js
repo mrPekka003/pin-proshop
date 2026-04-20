@@ -13,14 +13,30 @@ import AdminShopScreen from './screens/AdminShopScreen';
 import AdminBallFormScreen from './screens/AdminBallFormScreen';
 import AdminShopFormScreen from './screens/AdminShopFormScreen';
 
-// Inside Stack.Navigator, add these:
-
-
 const Stack = createNativeStackNavigator();
+
+const linking = {
+  prefixes: [],
+  config: {
+    screens: {
+      Home: '',
+      BallCatalog: 'catalog',
+      BallDetail: 'catalog/detail',
+      Shop: 'shop',
+      DrillerBooking: 'booking',
+      Login: 'login',
+      AdminDashboard: 'admin',
+      AdminBalls: 'admin/balls',
+      AdminShop: 'admin/shop',
+      AdminBallForm: 'admin/balls/form',
+      AdminShopForm: 'admin/shop/form',
+    },
+  },
+};
 
 export default function App() {
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator initialRouteName="Home"
         screenOptions={{
           headerStyle: { backgroundColor: Colors.card },
@@ -51,5 +67,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-
-//just some test notes here
